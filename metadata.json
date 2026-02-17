@@ -1,0 +1,8 @@
+{
+  "name": "ECO FARM",
+  "description": "একটি আধুনিক গরুর খামার ও দুধের দোকান ম্যানেজমেন্ট পোর্টাল।",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
