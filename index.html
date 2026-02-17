@@ -14,6 +14,16 @@
       font-family: 'Hind Siliguri', 'Inter', sans-serif;
       scroll-behavior: smooth;
     }
+    #root:empty::before {
+      content: 'লোড হচ্ছে... / Loading EcoDairy Farm...';
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #64748b;
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
   </style>
 <script type="importmap">
 {
@@ -23,12 +33,36 @@
     "react": "https://esm.sh/react@^19.2.4",
     "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
     "@google/genai": "https://esm.sh/@google/genai@^1.41.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react-dom": "https://esm.sh/react-dom@^19.2.4",
+    "react-dom/client": "https://esm.sh/react-dom@19.2.4/client"
   }
 }
 </script>
 </head>
 <body class="bg-stone-50 text-slate-900">
   <div id="root"></div>
+
+  <!-- Entry Point Script -->
+  <script type="module" src="index.tsx"></script>
+
+  <!-- Global Error Handling -->
+  <script>
+    window.addEventListener('error', function(e) {
+      console.error('Application Runtime Error:', e.message);
+      const root = document.getElementById('root');
+      if (root && root.innerHTML === '') {
+        root.innerHTML = `
+          <div style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; font-family: sans-serif;">
+            <h1 style="color: #ef4444; margin-bottom: 10px;">Application Error</h1>
+            <p style="color: #64748b; margin-bottom: 20px;">Something went wrong while loading the app.</p>
+            <button onclick="window.location.reload()" style="background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+              Refresh Page
+            </button>
+          </div>
+        `;
+      }
+    });
+  </script>
 </body>
 </html>

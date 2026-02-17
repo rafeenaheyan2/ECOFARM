@@ -68,16 +68,16 @@ const NavigationWrapper: React.FC<{
   const navigate = useNavigate();
 
   const getDashboardPath = () => {
-    if (userRole === 'ADMIN') return '/admin-dashboard.html';
-    if (userRole === 'ENTREPRENEUR') return '/entrepreneur-dashboard.html';
-    return '/customer-dashboard.html';
+    if (userRole === 'ADMIN') return 'admin-dashboard.html';
+    if (userRole === 'ENTREPRENEUR') return 'entrepreneur-dashboard.html';
+    return 'customer-dashboard.html';
   };
 
   const handleProtectedAction = () => {
     if (isLoggedIn) {
       navigate(getDashboardPath());
     } else {
-      navigate('/login?role=CUSTOMER');
+      navigate('login?role=CUSTOMER');
     }
   };
 
@@ -93,50 +93,50 @@ const NavigationWrapper: React.FC<{
           {/* Main Landing Page - Redirect to dashboard if logged in */}
           <Route 
             index 
-            element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Home />} 
+            element={isLoggedIn ? <Navigate to="dashboard" replace /> : <Home />} 
           />
           <Route 
-            path="/" 
-            element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Home />} 
+            path="" 
+            element={isLoggedIn ? <Navigate to="dashboard" replace /> : <Home />} 
           />
           
-          {/* Public Routes - Accessible from menu even when logged in */}
-          <Route path="/about" element={<About />} />
-          <Route path="/gallery" element={<Gallery isLoggedIn={isLoggedIn} onProtectedAction={(t) => t === 'dashboard' ? handleProtectedAction() : navigate('/gallery')} />} />
-          <Route path="/contact" element={<Contact />} />
+          {/* Public Routes */}
+          <Route path="about" element={<About />} />
+          <Route path="gallery" element={<Gallery isLoggedIn={isLoggedIn} onProtectedAction={(t) => t === 'dashboard' ? handleProtectedAction() : navigate('gallery')} />} />
+          <Route path="contact" element={<Contact />} />
           
           {/* Auth Routes */}
           <Route 
-            path="/login" 
-            element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Login onLogin={onLogin} />} 
+            path="login" 
+            element={isLoggedIn ? <Navigate to="dashboard" replace /> : <Login onLogin={onLogin} />} 
           />
 
           {/* Protected Dashboard Entry Route */}
           <Route 
-            path="/dashboard" 
+            path="dashboard" 
             element={isLoggedIn ? (
               <Navigate to={getDashboardPath()} replace />
-            ) : <Navigate to="/login" replace />} 
+            ) : <Navigate to="login" replace />} 
           />
 
           {/* Specific Dashboard Layouts */}
           <Route 
-            path="/admin-dashboard.html" 
-            element={isLoggedIn && userRole === 'ADMIN' ? <Dashboard /> : <Navigate to="/login?role=ADMIN" replace />} 
+            path="admin-dashboard.html" 
+            element={isLoggedIn && userRole === 'ADMIN' ? <Dashboard /> : <Navigate to="login?role=ADMIN" replace />} 
           />
           
           <Route 
-            path="/entrepreneur-dashboard.html" 
-            element={isLoggedIn && userRole === 'ENTREPRENEUR' ? <RoleDashboard role="ENTREPRENEUR" user={{ name: 'Muktarul Huq', id: 'muktarul_123' }} /> : <Navigate to="/login?role=ENTREPRENEUR" replace />} 
+            path="entrepreneur-dashboard.html" 
+            element={isLoggedIn && userRole === 'ENTREPRENEUR' ? <RoleDashboard role="ENTREPRENEUR" user={{ name: 'Muktarul Huq', id: 'muktarul_123' }} /> : <Navigate to="login?role=ENTREPRENEUR" replace />} 
           />
           
           <Route 
-            path="/customer-dashboard.html" 
-            element={isLoggedIn && userRole === 'CUSTOMER' ? <RoleDashboard role="CUSTOMER" user={{ name: 'Valued Customer', id: 'customer_123' }} /> : <Navigate to="/login?role=CUSTOMER" replace />} 
+            path="customer-dashboard.html" 
+            element={isLoggedIn && userRole === 'CUSTOMER' ? <RoleDashboard role="CUSTOMER" user={{ name: 'Valued Customer', id: 'customer_123' }} /> : <Navigate to="login?role=CUSTOMER" replace />} 
           />
 
           {/* Catch-all Redirect */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="" replace />} />
         </Routes>
       </main>
     </>
