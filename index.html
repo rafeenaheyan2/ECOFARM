@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ইকোর ডেইরি খামার - EcoDairy Farm</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +12,7 @@
     body {
       font-family: 'Hind Siliguri', 'Inter', sans-serif;
       scroll-behavior: smooth;
+      overflow-x: hidden;
     }
     .loading-screen {
       position: fixed;
@@ -28,22 +28,32 @@
       opacity: 0;
       pointer-events: none;
     }
-    #root:empty::before {
-      content: '';
+    /* Mobile Menu Transition */
+    #mobile-menu {
+      transition: transform 0.3s ease-in-out;
+      transform: translateY(-100%);
+    }
+    #mobile-menu.active {
+      transform: translateY(0);
+    }
+    /* Smooth Scroll Padding */
+    section {
+      scroll-margin-top: 5rem;
     }
   </style>
   <script>
+    // Polyfill for process.env
     window.process = { env: { API_KEY: "" } };
   </script>
-<script type="importmap">
+  <script type="importmap">
 {
   "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.41.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "react/": "https://esm.sh/react@^19.2.4/",
     "react": "https://esm.sh/react@^19.2.4",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.41.0",
     "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
-    "lucide-react": "https://esm.sh/lucide-react@^0.566.0"
+    "lucide-react": "https://esm.sh/lucide-react@^0.568.0"
   }
 }
 </script>
@@ -52,15 +62,17 @@
   <div id="loader" class="loading-screen">
     <div class="flex flex-col items-center">
       <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-      <p class="mt-4 text-slate-500 font-bold">লোড হচ্ছে... / Loading...</p>
+      <p class="mt-4 text-slate-500 font-bold text-center">লোড হচ্ছে... / Loading...</p>
     </div>
   </div>
 
   <div id="root"></div>
 
+  <!-- Main JavaScript Logic -->
   <script type="module" src="index.js"></script>
 
   <script>
+    // Global error listener for debugging
     window.addEventListener('error', function(e) {
       console.error('Runtime Error:', e.message);
     });
