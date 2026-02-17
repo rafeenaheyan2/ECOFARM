@@ -6,13 +6,12 @@ const state = {
   isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
   userRole: localStorage.getItem('userRole') || 'CUSTOMER',
   isMobileMenuOpen: false,
-  view: 'LOGIN' // For auth page toggling
 };
 
 const TRANSLATIONS = {
   bn: {
-    nav: { home: 'হোম', about: 'আমাদের সম্পর্কে', gallery: 'গ্যালারি', contact: 'যোগাযোগ', login: 'লগইন', logout: 'লগআউট', dashboard: 'ড্যাশবোর্ড' },
-    hero: { title: 'খামার থেকে সরাসরি খাঁটি দুধ আপনার টেবিলে।', subtitle: 'যাদুরানী, ঠাকুরগাঁওয়ে অবস্থিত আমাদের খামারে উৎপাদিত বিষমুক্ত ও স্বাস্থ্যকর দুধ।', cta: 'শুরু করুন' },
+    nav: { home: 'হোম', about: 'আমাদের সম্পর্কে', gallery: 'গ্যালারি', contact: 'যোগাযোগ', login: 'লগইন', logout: 'লগআউট', dashboard: 'ড্যাশবোর্ড', order: 'অর্ডার করুন' },
+    hero: { title: 'খামার থেকে সরাসরি খাঁটি দুধ আপনার টেবিলে।', subtitle: 'যাদুরানী, ঠাকুরগাঁওয়ে অবস্থিত আমাদের খামারে উৎপাদিত বিষমুক্ত ও স্বাস্থ্যকর দুধ।', cta: 'অর্ডার করুন' },
     farm: {
       title: 'খামার তথ্য',
       subtitle: 'ইকো ডেইরি ফার্ম ঠাকুরগাঁও জেলার হরিপুর উপজেলায় অবস্থিত একটি আধুনিক ও আদর্শ ডেইরি প্রকল্প।',
@@ -20,11 +19,34 @@ const TRANSLATIONS = {
       address_value: 'যাদুরানী, কামারপুকুর, হরিপুর, ঠাকুরগাঁও',
       contact_title: 'যোগাযোগ ও ব্যবস্থাপনা',
       manager_label: 'ম্যানেজার'
+    },
+    order: {
+      title: 'তাজা দুধের অর্ডার দিন',
+      subtitle: 'সরাসরি খামার থেকে সংগৃহীত খাঁটি দুধের জন্য নিচের ফর্মটি পূরণ করুন।',
+      product: 'দুধের ধরন',
+      quantity: 'পরিমাণ (লিটার)',
+      schedule: 'ডেলিভারি সময়সূচী',
+      address: 'ডেলিভারি ঠিকানা',
+      name: 'আপনার নাম',
+      phone: 'ফোন নম্বর',
+      submit: 'অর্ডার নিশ্চিত করুন',
+      payment_note: 'পেমেন্ট পদ্ধতি: ক্যাশ অন ডেলিভারি (পণ্য হাতে পেয়ে টাকা পরিশোধ করুন)',
+      success: 'আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে! আমরা শীঘ্রই যোগাযোগ করব।',
+      products: {
+        cow: 'খাঁটি গরুর দুধ (Cow Milk)',
+        buffalo: 'মহিষের দুধ (Buffalo Milk)',
+        ghee: 'খাঁটি গাওয়া ঘি (Pure Ghee)'
+      },
+      schedules: {
+        once: 'একবার (Only Once)',
+        daily: 'প্রতিদিন (Daily)',
+        weekly: 'সাপ্তাহিক (Weekly)'
+      }
     }
   },
   en: {
-    nav: { home: 'Home', about: 'About', gallery: 'Gallery', contact: 'Contact', login: 'Login', logout: 'Logout', dashboard: 'Dashboard' },
-    hero: { title: 'Directly Pure Milk to your table.', subtitle: 'Toxin-free and healthy milk from our farm in Yadurani, Thakurgaon.', cta: 'Get Started' },
+    nav: { home: 'Home', about: 'About', gallery: 'Gallery', contact: 'Contact', login: 'Login', logout: 'Logout', dashboard: 'Dashboard', order: 'Order Now' },
+    hero: { title: 'Directly Pure Milk to your table.', subtitle: 'Toxin-free and healthy milk from our farm in Yadurani, Thakurgaon.', cta: 'Order Now' },
     farm: {
       title: 'Farm Information',
       subtitle: 'Eco Dairy Farm is a modern and model dairy project located in Haripur, Thakurgaon.',
@@ -32,6 +54,29 @@ const TRANSLATIONS = {
       address_value: 'Yadurani, Kamarpukur, Haripur, Thakurgaon',
       contact_title: 'Contact & Management',
       manager_label: 'Manager'
+    },
+    order: {
+      title: 'Order Fresh Milk',
+      subtitle: 'Fill out the form below to order pure milk directly from the farm.',
+      product: 'Milk Type',
+      quantity: 'Quantity (Liters)',
+      schedule: 'Delivery Schedule',
+      address: 'Delivery Address',
+      name: 'Your Name',
+      phone: 'Phone Number',
+      submit: 'Confirm Order',
+      payment_note: 'Payment Method: Cash on Delivery (Pay when you receive)',
+      success: 'Your order has been placed successfully! We will contact you soon.',
+      products: {
+        cow: 'Pure Cow Milk',
+        buffalo: 'Buffalo Milk',
+        ghee: 'Pure Cow Ghee'
+      },
+      schedules: {
+        once: 'Only Once',
+        daily: 'Daily',
+        weekly: 'Weekly'
+      }
     }
   }
 };
@@ -57,7 +102,47 @@ const notify = (msg, type = 'SUCCESS') => {
 window.toggleMenu = () => {
   state.isMobileMenuOpen = !state.isMobileMenuOpen;
   const menu = document.getElementById('mobile-menu');
-  if (menu) menu.classList.toggle('active', state.isMobileMenuOpen);
+  if (menu) {
+    if (state.isMobileMenuOpen) {
+      menu.classList.add('active');
+    } else {
+      menu.classList.remove('active');
+    }
+  }
+};
+
+window.closeMenu = () => {
+  state.isMobileMenuOpen = false;
+  const menu = document.getElementById('mobile-menu');
+  if (menu) menu.classList.remove('active');
+};
+
+window.handleNavClick = (hash) => {
+  // If clicking from another page to a home section
+  const currentHash = window.location.hash.replace('#', '') || 'home';
+  const isTargetHomeSection = ['home', 'about', 'gallery', 'contact'].includes(hash);
+  const isCurrentlyHome = ['home', 'about', 'gallery', 'contact', ''].includes(currentHash);
+
+  window.closeMenu();
+
+  if (hash === 'home') {
+    window.location.hash = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  if (isTargetHomeSection && isCurrentlyHome) {
+    const el = document.getElementById(hash);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      // Update hash without triggering hashchange if already there
+      if (window.location.hash !== '#' + hash) {
+        history.pushState(null, null, '#' + hash);
+      }
+    }
+  } else {
+    window.location.hash = hash;
+  }
 };
 
 window.setLang = (lang) => {
@@ -85,26 +170,26 @@ const Navbar = () => `
   <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200 h-20 flex items-center">
     <div class="max-w-7xl mx-auto px-4 w-full flex justify-between items-center">
       <div class="flex items-center gap-2 md:gap-3">
-        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center cursor-pointer" onclick="handleNavClick('home')">
            <svg class="text-white w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <a href="#" class="text-xl md:text-2xl font-black text-slate-900 tracking-tighter">EcoDairy<span class="text-blue-600">.</span></a>
+        <span class="text-xl md:text-2xl font-black text-slate-900 tracking-tighter cursor-pointer" onclick="handleNavClick('home')">EcoDairy<span class="text-blue-600">.</span></span>
       </div>
 
       <div class="hidden lg:flex items-center gap-8">
-        <a href="#" class="font-bold text-slate-600 hover:text-blue-600 transition-colors">${t('nav.home')}</a>
-        <a href="#about" class="font-bold text-slate-600 hover:text-blue-600 transition-colors">${t('nav.about')}</a>
-        <a href="#gallery" class="font-bold text-slate-600 hover:text-blue-600 transition-colors">${t('nav.gallery')}</a>
-        <a href="#contact" class="font-bold text-slate-600 hover:text-blue-600 transition-colors">${t('nav.contact')}</a>
+        <button onclick="handleNavClick('home')" class="font-bold text-slate-600 hover:text-blue-600 transition-colors">${t('nav.home')}</button>
+        <button onclick="handleNavClick('about')" class="font-bold text-slate-600 hover:text-blue-600 transition-colors">${t('nav.about')}</button>
+        <button onclick="handleNavClick('gallery')" class="font-bold text-slate-600 hover:text-blue-600 transition-colors">${t('nav.gallery')}</button>
+        <button onclick="handleNavClick('contact')" class="font-bold text-slate-600 hover:text-blue-600 transition-colors">${t('nav.contact')}</button>
         <div class="flex bg-slate-100 p-1 rounded-xl">
           <button onclick="setLang('bn')" class="px-3 py-1.5 rounded-lg text-xs font-bold ${state.language === 'bn' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'}">বাং</button>
           <button onclick="setLang('en')" class="px-3 py-1.5 rounded-lg text-xs font-bold ${state.language === 'en' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'}">EN</button>
         </div>
         ${state.isLoggedIn ? `
-          <a href="#dashboard" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all">${t('nav.dashboard')}</a>
+          <button onclick="handleNavClick('dashboard')" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all">${t('nav.dashboard')}</button>
           <button onclick="logout()" class="text-red-500 font-bold ml-4">${t('nav.logout')}</button>
         ` : `
-          <a href="#login" class="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all">${t('nav.login')}</a>
+          <button onclick="handleNavClick('login')" class="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all">${t('nav.login')}</button>
         `}
       </div>
 
@@ -114,10 +199,10 @@ const Navbar = () => `
     </div>
 
     <div id="mobile-menu" class="lg:hidden fixed top-20 left-0 right-0 bg-white border-b border-slate-200 p-6 space-y-4 shadow-2xl z-40">
-      <a href="#" onclick="toggleMenu()" class="block font-bold text-lg text-slate-600">${t('nav.home')}</a>
-      <a href="#about" onclick="toggleMenu()" class="block font-bold text-lg text-slate-600">${t('nav.about')}</a>
-      <a href="#gallery" onclick="toggleMenu()" class="block font-bold text-lg text-slate-600">${t('nav.gallery')}</a>
-      <a href="#contact" onclick="toggleMenu()" class="block font-bold text-lg text-slate-600">${t('nav.contact')}</a>
+      <button onclick="handleNavClick('home')" class="block w-full text-left font-bold text-lg text-slate-600">${t('nav.home')}</button>
+      <button onclick="handleNavClick('about')" class="block w-full text-left font-bold text-lg text-slate-600">${t('nav.about')}</button>
+      <button onclick="handleNavClick('gallery')" class="block w-full text-left font-bold text-lg text-slate-600">${t('nav.gallery')}</button>
+      <button onclick="handleNavClick('contact')" class="block w-full text-left font-bold text-lg text-slate-600">${t('nav.contact')}</button>
       <div class="flex justify-between items-center py-2 border-t border-slate-100">
         <div class="flex bg-slate-100 p-1 rounded-xl">
           <button onclick="setLang('bn')" class="px-4 py-2 rounded-lg text-sm font-bold ${state.language === 'bn' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'}">বাং</button>
@@ -125,11 +210,11 @@ const Navbar = () => `
         </div>
         ${state.isLoggedIn ? `
           <div class="flex flex-col gap-2">
-            <a href="#dashboard" onclick="toggleMenu()" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold text-center">${t('nav.dashboard')}</a>
-            <button onclick="logout(); toggleMenu();" class="text-red-500 font-bold">${t('nav.logout')}</button>
+            <button onclick="handleNavClick('dashboard')" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold text-center">${t('nav.dashboard')}</button>
+            <button onclick="logout()" class="text-red-500 font-bold">${t('nav.logout')}</button>
           </div>
         ` : `
-          <a href="#login" onclick="toggleMenu()" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold text-center">${t('nav.login')}</a>
+          <button onclick="handleNavClick('login')" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold text-center">${t('nav.login')}</button>
         `}
       </div>
     </div>
@@ -137,7 +222,7 @@ const Navbar = () => `
 `;
 
 const Home = () => `
-  <section class="pt-24 lg:pt-40 pb-12 lg:pb-20 px-4">
+  <section id="home" class="pt-24 lg:pt-40 pb-12 lg:pb-20 px-4">
     <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
       <div class="text-center lg:text-left">
         <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-slate-900 leading-tight mb-4 lg:mb-6">
@@ -146,9 +231,9 @@ const Home = () => `
         <p class="text-base md:text-lg text-slate-500 mb-6 lg:mb-8 max-w-xl mx-auto lg:mx-0">
           ${t('hero.subtitle')}
         </p>
-        <a href="#login" class="inline-block w-full sm:w-auto bg-blue-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-blue-700 shadow-xl shadow-blue-200 transition-all text-center">
+        <button onclick="handleNavClick('order')" class="inline-block w-full sm:w-auto bg-blue-600 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-blue-700 shadow-xl shadow-blue-200 transition-all text-center">
           ${t('hero.cta')}
-        </a>
+        </button>
       </div>
       <div class="relative mt-8 lg:mt-0">
         <img src="https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&w=800" class="rounded-3xl lg:rounded-[40px] shadow-2xl w-full aspect-[4/3] object-cover" />
@@ -156,8 +241,57 @@ const Home = () => `
     </div>
   </section>
 
-  <!-- Farm Information Section -->
-  <section id="farm-info" class="py-16 lg:py-24 bg-blue-50/30 px-4">
+  <!-- About Section -->
+  <section id="about" class="py-16 lg:py-24 bg-white px-4 border-t border-slate-50">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-black text-slate-900 mb-4">আমাদের সম্পর্কে</h2>
+        <p class="text-slate-500 max-w-2xl mx-auto">প্রাকৃতিক ও স্বাস্থ্যকর দুধের নিশ্চয়তা দিতে আমরা বদ্ধপরিকর।</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 text-center">
+          <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-2">বিশুদ্ধতা</h3>
+          <p class="text-slate-500 text-sm">কোনো ভেজাল বা রাসায়নিক ছাড়াই সরাসরি খামার থেকে সংগ্রহ।</p>
+        </div>
+        <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 text-center">
+          <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-2">তাজা দুধ</h3>
+          <p class="text-slate-500 text-sm">প্রতিদিন সকালে ও বিকালে সরাসরি আপনার দরজায় পৌঁছানো হয়।</p>
+        </div>
+        <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 text-center">
+          <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-2">দ্রুত ডেলিভারি</h3>
+          <p class="text-slate-500 text-sm">আমাদের নিজস্ব ডেলিভারি নেটওয়ার্কের মাধ্যমে দ্রুততম সময়ে সার্ভিস।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery" class="py-16 lg:py-24 bg-stone-50 px-4 border-t border-slate-50">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-black text-slate-900 mb-4">গ্যালারি</h2>
+        <p class="text-slate-500 max-w-2xl mx-auto">আমাদের খামারের এক ঝলক।</p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <img src="https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&w=400" class="rounded-2xl shadow-sm aspect-square object-cover" />
+        <img src="https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=400" class="rounded-2xl shadow-sm aspect-square object-cover" />
+        <img src="https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&w=400" class="rounded-2xl shadow-sm aspect-square object-cover" />
+        <img src="https://images.unsplash.com/photo-1527334919514-3c979b370431?auto=format&fit=crop&w=400" class="rounded-2xl shadow-sm aspect-square object-cover" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-16 lg:py-24 bg-blue-50/30 px-4 border-t border-slate-50">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-5xl font-black text-slate-900 mb-6">${t('farm.title')}</h2>
@@ -243,11 +377,75 @@ const Home = () => `
   </section>
 `;
 
+const OrderForm = () => `
+  <section id="order" class="pt-24 lg:pt-32 pb-12 lg:pb-20 px-4 min-h-screen bg-stone-50">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl md:text-5xl font-black text-slate-900 mb-4">${t('order.title')}</h2>
+        <p class="text-slate-500 text-lg">${t('order.subtitle')}</p>
+      </div>
+
+      <div class="bg-white p-8 md:p-12 rounded-[40px] shadow-2xl border border-slate-100">
+        <form id="orderForm" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="space-y-6">
+            <div>
+              <label class="block text-sm font-bold text-slate-700 mb-2">${t('order.name')}</label>
+              <input type="text" name="name" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-blue-600 outline-none transition-all" placeholder=" Rahim Ahmed" />
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-slate-700 mb-2">${t('order.phone')}</label>
+              <input type="tel" name="phone" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-blue-600 outline-none transition-all" placeholder="017XXXXXXXX" />
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-slate-700 mb-2">${t('order.address')}</label>
+              <textarea name="address" required rows="3" class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-blue-600 outline-none transition-all" placeholder="Your full delivery address..."></textarea>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <div>
+              <label class="block text-sm font-bold text-slate-700 mb-2">${t('order.product')}</label>
+              <select name="product" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-blue-600 outline-none transition-all appearance-none">
+                <option value="cow">${t('order.products.cow')}</option>
+                <option value="buffalo">${t('order.products.buffalo')}</option>
+                <option value="ghee">${t('order.products.ghee')}</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-slate-700 mb-2">${t('order.quantity')}</label>
+              <input type="number" name="quantity" required min="1" class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-blue-600 outline-none transition-all" placeholder="e.g. 5" />
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-slate-700 mb-2">${t('order.schedule')}</label>
+              <select name="schedule" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-blue-600 outline-none transition-all appearance-none">
+                <option value="once">${t('order.schedules.once')}</option>
+                <option value="daily">${t('order.schedules.daily')}</option>
+                <option value="weekly">${t('order.schedules.weekly')}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="md:col-span-2 pt-4 border-t border-slate-50 mt-4">
+            <p class="text-slate-500 text-sm italic mb-6 flex items-center gap-2">
+              <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              ${t('order.payment_note')}
+            </p>
+            <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-blue-700 shadow-xl shadow-blue-100 transition-all flex items-center justify-center gap-3">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+              ${t('order.submit')}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+`;
+
 const Login = () => `
-  <section class="min-h-screen pt-24 pb-12 px-4 flex justify-center items-center bg-blue-50/50">
+  <section id="login" class="min-h-screen pt-24 pb-12 px-4 flex justify-center items-center bg-blue-50/50">
     <div class="w-full max-w-md bg-white p-6 md:p-10 rounded-3xl md:rounded-[40px] shadow-2xl border border-slate-100">
       <div class="text-center mb-6">
-        <h2 class="text-2xl md:text-3xl font-black text-slate-900">${state.view === 'LOGIN' ? 'লগইন করুন' : 'অ্যাকাউন্ট খুলুন'}</h2>
+        <h2 class="text-2xl md:text-3xl font-black text-slate-900">${state.language === 'bn' ? 'লগইন করুন' : 'Sign In'}</h2>
         <p class="text-slate-500 mt-2 text-sm">আপনার পছন্দের রোল নির্বাচন করুন</p>
       </div>
       
@@ -275,7 +473,7 @@ const Login = () => `
 `;
 
 const Dashboard = () => `
-  <section class="pt-24 lg:pt-32 pb-12 lg:pb-20 px-4">
+  <section id="dashboard" class="pt-24 lg:pt-32 pb-12 lg:pb-20 px-4">
     <div class="max-w-7xl mx-auto">
       <div class="flex flex-col lg:flex-row gap-8 items-start">
         <aside class="w-full lg:w-64 flex lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0">
@@ -317,9 +515,10 @@ const Footer = () => `
       <div class="space-y-4">
         <h5 class="font-bold text-blue-400 uppercase tracking-widest text-xs">${state.language === 'bn' ? 'দ্রুত লিংক' : 'Quick Links'}</h5>
         <div class="flex flex-col gap-2 text-slate-400 text-sm">
-          <a href="#" class="hover:text-blue-500 transition-colors">${t('nav.home')}</a>
-          <a href="#about" class="hover:text-blue-500 transition-colors">${t('nav.about')}</a>
-          <a href="#gallery" class="hover:text-blue-500 transition-colors">${t('nav.gallery')}</a>
+          <button onclick="handleNavClick('home')" class="text-left hover:text-blue-500 transition-colors">${t('nav.home')}</button>
+          <button onclick="handleNavClick('about')" class="text-left hover:text-blue-500 transition-colors">${t('nav.about')}</button>
+          <button onclick="handleNavClick('gallery')" class="text-left hover:text-blue-500 transition-colors">${t('nav.gallery')}</button>
+          <button onclick="handleNavClick('order')" class="text-left text-blue-400 hover:text-blue-300 font-bold transition-colors">${t('nav.order')}</button>
         </div>
       </div>
       <div class="space-y-4">
@@ -356,9 +555,8 @@ const render = () => {
   
   let content = Navbar();
 
-  if (hash === 'home') {
-    content += Home();
-  } else if (hash === 'login') {
+  // Basic Router logic
+  if (hash === 'login') {
     if (state.isLoggedIn) {
       window.location.hash = 'dashboard';
       return;
@@ -370,17 +568,17 @@ const render = () => {
       return;
     }
     content += Dashboard();
-  } else if (hash === 'about' || hash === 'gallery' || hash === 'contact') {
-    // Basic sections can be handled or redirect to home with anchor
-    content += Home();
+  } else if (hash === 'order') {
+    content += OrderForm();
   } else {
+    // For home, about, gallery, contact - we render the Home component
     content += Home();
   }
 
   content += Footer();
   root.innerHTML = content;
 
-  // Re-attach listeners
+  // Re-attach listeners after DOM update
   const authForm = document.getElementById('authForm');
   if (authForm) {
     authForm.addEventListener('submit', (e) => {
@@ -394,14 +592,41 @@ const render = () => {
     });
   }
 
+  const orderForm = document.getElementById('orderForm');
+  if (orderForm) {
+    orderForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(orderForm);
+      const orderDetails = Object.fromEntries(formData.entries());
+      console.log('Order Received:', orderDetails);
+      notify(t('order.success'));
+      orderForm.reset();
+      setTimeout(() => {
+        handleNavClick('home');
+      }, 3000);
+    });
+  }
+
+  // Handle post-render scrolling
+  if (['about', 'gallery', 'contact'].includes(hash)) {
+    setTimeout(() => {
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  } else if (hash === 'home' || !hash) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   // Hide loader
   const loader = document.getElementById('loader');
   if (loader) loader.classList.add('loading-hidden');
 };
 
-// Start
+// Listen for hash changes
 window.addEventListener('hashchange', render);
+
+// Initialize
 window.addEventListener('DOMContentLoaded', () => {
   render();
-  console.log("EcoDairy Farm Vanilla JS App Loaded Successfully");
+  console.log("EcoDairy Farm App Fully Initialized with Fixes");
 });

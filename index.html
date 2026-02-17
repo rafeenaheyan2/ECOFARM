@@ -13,6 +13,8 @@
       font-family: 'Hind Siliguri', 'Inter', sans-serif;
       scroll-behavior: smooth;
       overflow-x: hidden;
+      margin: 0;
+      padding: 0;
     }
     .loading-screen {
       position: fixed;
@@ -30,15 +32,27 @@
     }
     /* Mobile Menu Transition */
     #mobile-menu {
-      transition: transform 0.3s ease-in-out;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       transform: translateY(-100%);
+      pointer-events: none;
+      opacity: 0;
     }
     #mobile-menu.active {
       transform: translateY(0);
+      pointer-events: auto;
+      opacity: 1;
     }
-    /* Smooth Scroll Padding */
+    /* Smooth Scroll Padding for Fixed Navbar */
     section {
       scroll-margin-top: 5rem;
+    }
+    /* Hide scrollbar but allow scrolling */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   </style>
   <script>
@@ -49,11 +63,11 @@
 {
   "imports": {
     "@google/genai": "https://esm.sh/@google/genai@^1.41.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/",
     "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
-    "lucide-react": "https://esm.sh/lucide-react@^0.568.0"
+    "lucide-react": "https://esm.sh/lucide-react@^0.568.0",
+    "react/": "https://esm.sh/react@^19.2.4/"
   }
 }
 </script>
