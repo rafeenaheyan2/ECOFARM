@@ -2,15 +2,18 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
 export class GeminiService {
-  private ai: GoogleGenAI;
+  private ai: GoogleGenAI | null = null;
 
   constructor() {
-    // Initializing with named parameter as per @google/genai guidelines.
-    this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    // Initializing safely within the browser context
+    const apiKey = typeof process !== 'undefined' && process.env ? process.env.API_KEY : '';
+    if (apiKey) {
+      this.ai = new GoogleGenAI({ apiKey });
+    }
   }
 
   async getAiInsight(prompt: string): Promise<string> {
-    if (!process.env.API_KEY) return "AI পরামর্শ বর্তমানে উপলব্ধ নয়।";
+    if (!this.ai) return "AI পরামর্শ বর্তমানে উপলব্ধ নয় (Missing API Key)।";
     
     try {
       const response = await this.ai.models.generateContent({
@@ -21,7 +24,6 @@ export class GeminiService {
           temperature: 0.7,
         },
       });
-      // Extracting text output directly from the .text property of GenerateContentResponse.
       return response.text || "কোনো তথ্য পাওয়া যায়নি।";
     } catch (error) {
       console.error("Gemini Error:", error);
@@ -30,7 +32,7 @@ export class GeminiService {
   }
 
   async getSectionArticles(topic: string, language: string): Promise<any[]> {
-    if (!process.env.API_KEY) return [];
+    if (!this.ai) return [];
 
     try {
       const prompt = `Generate 3-5 short professional articles about "${topic}" in the context of an organic dairy farm.
@@ -56,7 +58,6 @@ export class GeminiService {
         }
       });
 
-      // Extracting text output directly from the .text property of GenerateContentResponse.
       const text = response.text || "[]";
       return JSON.parse(text);
     } catch (error) {

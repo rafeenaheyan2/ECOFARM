@@ -90,19 +90,15 @@ const NavigationWrapper: React.FC<{
       />
       <main className="flex-grow">
         <Routes>
-          {/* Main Landing Page - Redirect to dashboard if logged in */}
+          {/* Main Landing Page - Use relative path logic */}
           <Route 
             index 
-            element={isLoggedIn ? <Navigate to="dashboard" replace /> : <Home />} 
-          />
-          <Route 
-            path="" 
             element={isLoggedIn ? <Navigate to="dashboard" replace /> : <Home />} 
           />
           
           {/* Public Routes */}
           <Route path="about" element={<About />} />
-          <Route path="gallery" element={<Gallery isLoggedIn={isLoggedIn} onProtectedAction={(t) => t === 'dashboard' ? handleProtectedAction() : navigate('gallery')} />} />
+          <Route path="gallery" element={<Gallery isLoggedIn={isLoggedIn} onProtectedAction={(t) => t === 'private-gallery' ? handleProtectedAction() : navigate('gallery')} />} />
           <Route path="contact" element={<Contact />} />
           
           {/* Auth Routes */}
